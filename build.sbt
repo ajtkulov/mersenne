@@ -1,4 +1,4 @@
-name := "gSDCH"
+name := "mersenne"
 
 version := "1.0"
 
