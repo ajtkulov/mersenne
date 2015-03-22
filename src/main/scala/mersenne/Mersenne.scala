@@ -26,3 +26,11 @@ case class Mersenne(p : Int) {
     (0 to p - 1).filter(x => nonCycledSeq(seq(x)))
   }
 }
+
+object Helper {
+  def interest(p : Int, size : Int): Seq[Seq[Int]] = {
+    val m = Mersenne(p)
+    val set = m.nonCycledGenerators()
+    set.map(x=>m.seq(x)).filter(x => x.length == size)
+  }
+}
