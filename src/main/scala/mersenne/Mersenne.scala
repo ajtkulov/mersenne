@@ -1,5 +1,6 @@
 package mersenne
 
+import scala.collection.immutable.IndexedSeq
 import scala.collection.mutable.ArrayBuffer
 
 case class Mersenne(p : Int, shift : Int = 2) {
@@ -25,6 +26,19 @@ case class Mersenne(p : Int, shift : Int = 2) {
   def nonCycledGenerators(last : Int = 2) : Seq[Int] = {
     (0 to p - 1).filter(x => nonCycledSeq(seq(x), last))
   }
+
+  def toDot(fileName : String) : Unit = {
+    val strs: IndexedSeq[String] = for (i <- 0 to p - 1) yield {
+      s"     ${i} -> ${next(i)};"
+    }
+  val res = s"""
+    |digraph graphname {
+    |${strs.mkString("\n")}
+    | }
+  """.stripMargin
+
+    FileUtils.write(fileName, Iterator.single(res))
+  }
 }
 
 object Helper {
@@ -46,8 +60,19 @@ object Helper {
     nonCycle.map(x => m.seq(x)).foreach(println)
   }
 
-  def lastCommon(p : Int, s : Int) : Unit = {
+  def lastCommon(p : Int, s : Int) : (Int, Int) = {
     val m = Mersenne(p, s)
-    (0 to p - 1).map(x => m.seq(x).last).groupBy(x => x).map(x => (x._2.size, x._1)).toArray.sortBy(x => x._1).reverse.take(5).foreach(println)
+    (0 to p - 1).par.map(x => m.seq(x).last).groupBy(x => x).map(x => (x._2.size, x._1)).toArray.sortBy(x => x._1).reverse.take(1)(0)
+  }
+
+  def bestLastCommon(p : Int) : (Int, Int) = {
+    (0 to p - 1).par.map(x => lastCommon(p, x)).maxBy(x => x._1)
+  }
+
+  def allFiles(p: Int): Unit = {
+    for (i <- 0 to p - 1) {
+      val m = Mersenne(p, i)
+      m.toDot(s"${p}_${i}.dot")
+    }
   }
 }
