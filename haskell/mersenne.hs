@@ -14,12 +14,15 @@ seq1 x p s = if (Set.member x s)
            else 
  	   	seq1 (next1 x p) p (Set.insert x s)
 
-cycleLength :: (Hashable a, Num a) => a -> (a -> a) -> Set Int -> a -> a
-cycleLength elem func set len = if (Set.member h set)
+cycleLength :: (Hashable a, Num a, Ord a) => a -> (a -> a) -> Set Int -> a -> a -> a
+cycleLength elem func set len limit = if len > limit 
+	    	      	      	then limit
+	    	      	        else 
+				  if (Set.member h set)
 	    	   	    	then
 					len
 				else
-					cycleLength newElem func (Set.insert h set) (len + 1)
+					cycleLength newElem func (Set.insert h set) (len + 1) limit
 				where
 					h = H.hash elem
 					newElem = func elem
