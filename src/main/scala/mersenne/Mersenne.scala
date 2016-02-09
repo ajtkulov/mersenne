@@ -4,7 +4,7 @@ import scala.collection.immutable.IndexedSeq
 import scala.collection.mutable.ArrayBuffer
 
 case class Mersenne(p : Int, shift : Int = 2) {
-  def next(x : Int) : Int = (x * x - shift + p) % p
+  def next(x : Int) : Int = (x * x + x - shift + p) % p
 
   def seq(g : Int) : Seq[Int] = {
     var elem = g
@@ -74,5 +74,10 @@ object Helper {
       val m = Mersenne(p, i)
       m.toDot(s"${p}_${i}.dot")
     }
+  }
+
+  def files(p: Int, shift: Int): Unit = {
+    val m = Mersenne(p, shift)
+    m.toDot(s"${p}_${shift}.dot")
   }
 }
