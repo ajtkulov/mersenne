@@ -26,6 +26,5 @@ cycleLengthPrivate elem func set len limit = if len > limit
 				where
 					h = H.hash elem
 					newElem = func elem
-					newHash = H.hash newElem
 
 cycleLength elem func limit = cycleLengthPrivate elem func empty 0 limit
