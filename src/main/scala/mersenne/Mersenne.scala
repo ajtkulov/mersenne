@@ -4,6 +4,34 @@ import scala.collection.immutable.IndexedSeq
 import scala.collection.mutable.ArrayBuffer
 import MathUtils._
 
+
+object Prime {
+  def isPrime(n: Int): Boolean = {
+    val sq = (Math.sqrt(n) + 1).toInt
+    !(2 to sq).exists(div => n % div == 0)
+  }
+}
+
+
+object Jakobi {
+  def jab(a: Int, b: Int): Int = {
+    (a, b) match {
+      case (a1, b1) if a == 0 => 0
+      case (a1, b1) if a == 1 => 1
+      case (a1, b1) if a == 2 && (b % 8 == 1 || b % 8 == 7) => 1
+      case (a1, b1) if a == 2 => -1
+      case (a1, b1) if a % 4 == 0 => jab(a / 4, b)
+      case (a1, b1) if a % 2 == 0 && (b % 8 == 1 || b % 8 == 7) => jab(a / 2, b)
+      case (a1, b1) if a % 2 == 0 => -jab(a / 2, b)
+      case (a1, b1) => (if (a % 4 == 3 && b % 4 == 3) -1 else 1) * jab(b % a, a)
+    }
+
+
+  }
+
+
+}
+
 object MathUtils {
 
   implicit class Div(value: Int) {
@@ -30,7 +58,7 @@ object MathUtils {
 
 case class Mersenne(p: Int, shift: Int = 2) {
   //  def next(x : Int) : Int = (x * x + x - shift + p) % p
-  def next(x: Int): Int = (x * x * x - 1 + p) % p
+  def next(x: Int): Int = (x * x) %% p
 
   def seq(g: Int): Seq[Int] = {
     var elem = g
